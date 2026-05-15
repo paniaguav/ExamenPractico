@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Examen Práctico</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="analisis.webp">
+</head>
+<body>
+    <header>
+        <h1>Examen Práctico 2.o Parcial - Fundamentos de Inteligencia Artificial</h1>
+        <p class="subtitle">Análisis de datos y Gráficas</p>
+        <p class="subtitle" style="font-size: 0.85rem;">Leonardo Alexis Paniagua Valencia - 6IV6</p>
+    </header>
+
+    <main>
+        <div class="tabs-container">
+            <button class="tab-btn activo" onclick="cambiarVariable('peso', this)">Peso</button>
+            <button class="tab-btn" onclick="cambiarVariable('altura', this)">Altura</button>
+            <button class="tab-btn" onclick="cambiarVariable('velocidad', this)">Velocidad</button>
+            <button class="tab-btn" onclick="cambiarVariable('color', this)">Color</button>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card"><div class="kpi-title">Media</div><div class="kpi-value" id="val-media">-</div><div class="kpi-desc">Promedio aritmético</div></div>
+            <div class="kpi-card"><div class="kpi-title">Mediana</div><div class="kpi-value" id="val-mediana">-</div><div class="kpi-desc">Valor central</div></div>
+            <div class="kpi-card"><div class="kpi-title">Moda</div><div class="kpi-value" id="val-moda">-</div><div class="kpi-desc">Valor más frecuente</div></div>
+            <div class="kpi-card"><div class="kpi-title">Datos Válidos</div><div class="kpi-value">29</div><div class="kpi-desc">Sin valores faltantes</div></div>
+        </div>
+
+        <h2 style="margin-top: 40px; border-bottom: 2px solid var(--borde-tarjeta); padding-bottom: 10px;">Gráficas de Distribución</h2>
+        
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>Frecuencias Absolutas</h3>
+                <img id="img-absoluta" src="" alt="Gráfica de Barras">
+            </div>
+            <div class="chart-card">
+                <h3>Frecuencias Relativas</h3>
+                <img id="img-relativa" src="" alt="Gráfica de Pastel">
+            </div>
+            <div class="chart-card" id="card-acumulada">
+                <h3>Frecuencias Acumuladas</h3>
+                <img id="img-acumulada" src="" alt="Gráfica Escalonada">
+            </div>
+            <div class="chart-card" id="card-poligono">
+                <h3>Polígono de Frecuencias</h3>
+                <img id="img-poligono" src="" alt="Polígono">
+            </div>
+        </div>
+    </main>
+
+    <script src="datos.js"></script>
+
+    <script>
+        function cargarImagenes(variable) {
+            document.getElementById('img-absoluta').src = "data:image/png;base64," + IMGS[variable + "_absoluta"];
+            document.getElementById('img-relativa').src = "data:image/png;base64," + IMGS[variable + "_relativa"];
+            
+            if (variable !== 'color') {
+                document.getElementById('img-acumulada').src = "data:image/png;base64," + IMGS[variable + "_acumulada"];
+                document.getElementById('img-poligono').src = "data:image/png;base64," + IMGS[variable + "_poligono"];
+            }
+        }
+
+        function cambiarVariable(variable, boton) {
+            document.getElementById('val-media').innerText = baseDatos[variable].media;
+            document.getElementById('val-mediana').innerText = baseDatos[variable].mediana;
+            document.getElementById('val-moda').innerText = baseDatos[variable].moda;
+
+            if (variable === 'color') {
+                document.getElementById('card-acumulada').style.display = 'none';
+                document.getElementById('card-poligono').style.display = 'none';
+                cargarImagenes('color');
+            } else {
+                document.getElementById('card-acumulada').style.display = 'block';
+                document.getElementById('card-poligono').style.display = 'block';
+                cargarImagenes(variable);
+            }
+
+            let botones = document.getElementsByClassName('tab-btn');
+            for(let i = 0; i < botones.length; i++) { botones[i].classList.remove('activo'); }
+            if(boton) boton.classList.add('activo');
+        }
+
+        // Cargar el peso por defecto al abrir la página
+        window.onload = function() {
+            cambiarVariable('peso', document.getElementsByClassName('tab-btn')[0]);
+        };
+    </script>
+</body>
+</html>
